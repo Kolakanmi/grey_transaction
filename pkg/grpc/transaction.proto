@@ -1,0 +1,23 @@
+syntax="proto3";
+
+service Wallet {
+  rpc GetBalance(GetBalanceRequest) returns (GetBalanceResponse);
+  rpc UpdateBalance(UpdateBalanceRequest) returns (UpdateBalanceResponse);
+}
+
+message GetBalanceRequest {
+  string UserID = 1;
+}
+
+message GetBalanceResponse {
+  float Balance = 1;
+}
+
+message UpdateBalanceRequest {
+  string UserID = 1;
+  float Amount = 2;
+}
+
+message UpdateBalanceResponse {
+  float Balance = 1;
+}
