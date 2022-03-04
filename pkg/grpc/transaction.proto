@@ -10,7 +10,6 @@ service Wallet {
 }
 
 message GetBalanceRequest {
-  string UserID = 1;
 }
 
 message GetBalanceResponse {
@@ -18,8 +17,7 @@ message GetBalanceResponse {
 }
 
 message UpdateBalanceRequest {
-  string UserID = 1;
-  double Amount = 2;
+  double Amount = 1;
 }
 
 message UpdateBalanceResponse {
