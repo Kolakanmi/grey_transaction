@@ -30,6 +30,9 @@ func (t *TransactionService) Credit(ctx context.Context, amount float64) (*TxnRe
 	if amount < 0 {
 		return nil, apperror.BadRequestError("Amount cannot be negative.")
 	}
+	if amount == 0 {
+		return nil, apperror.BadRequestError("Amount cannot be zero.")
+	}
 	id, err := t.transactionRepository.Create(ctx, &model.Transaction{
 		Amount: amount,
 		Status: model.Pending,
@@ -52,6 +55,9 @@ func (t *TransactionService) Credit(ctx context.Context, amount float64) (*TxnRe
 }
 
 func (t *TransactionService) Debit(ctx context.Context, amount float64) (*TxnResponse, error) {
+	if amount == 0 {
+		return nil, apperror.BadRequestError("Amount cannot be zero.")
+	}
 	response, err := t.walletClient.GetBalance(ctx, &proto.GetBalanceRequest{})
 	if err != nil {
 		log.Printf("error: %v \n", err)

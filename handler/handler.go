@@ -2,7 +2,6 @@ package handler
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 
 	"github.com/Kolakanmi/grey_transaction/pkg/http/response"
@@ -18,7 +17,6 @@ func New(service service.ITransactionService) *Handler {
 }
 
 func (h *Handler) Credit(w http.ResponseWriter, r *http.Request) error {
-	log.Println("Credit")
 	var req service.TxnRequest
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
