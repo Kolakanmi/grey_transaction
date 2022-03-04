@@ -57,8 +57,8 @@ func TestDebit(t *testing.T) {
 				if err != nil {
 					t.Errorf("Expected no error, but got %v", err)
 				}
-				if got.Balance != 80 {
-					t.Errorf("Expected balance to be %v, but got %v", 80, got.Balance)
+				if got.Balance != 90 {
+					t.Errorf("Expected balance to be %v, but got %v", 90, got.Balance)
 				}
 			})
 		})

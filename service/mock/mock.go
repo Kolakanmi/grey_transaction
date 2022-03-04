@@ -19,6 +19,5 @@ func (m *MockClient) GetBalance(ctx context.Context, in *proto.GetBalanceRequest
 	return &proto.GetBalanceResponse{Balance: balance}, nil
 }
 func (m *MockClient) UpdateBalance(ctx context.Context, in *proto.UpdateBalanceRequest, opts ...grpc.CallOption) (*proto.UpdateBalanceResponse, error) {
-	balance = balance + in.Amount
-	return &proto.UpdateBalanceResponse{Balance: balance}, nil
+	return &proto.UpdateBalanceResponse{Balance: balance + in.Amount}, nil
 }
