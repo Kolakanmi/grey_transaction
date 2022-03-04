@@ -11,7 +11,7 @@ func TestConnectDB(t *testing.T) {
 		Username: "postgres",
 		Password: "postgres",
 		Database: "postgres",
-		Address:  "1",
+		Address:  "localhost",
 		Port:     5432,
 	}
 	_, err := ConnectDB(conf)

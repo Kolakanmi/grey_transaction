@@ -7,7 +7,9 @@ import (
 	"github.com/Kolakanmi/grey_transaction/adapter"
 	"github.com/Kolakanmi/grey_transaction/handler"
 	"github.com/Kolakanmi/grey_transaction/pkg/database"
+	ch "github.com/Kolakanmi/grey_transaction/pkg/http/handler"
 	"github.com/Kolakanmi/grey_transaction/pkg/http/middleware"
+	"github.com/Kolakanmi/grey_transaction/pkg/http/response"
 	"github.com/Kolakanmi/grey_transaction/pkg/http/router"
 	"github.com/Kolakanmi/grey_transaction/repository"
 	"github.com/Kolakanmi/grey_transaction/service"
@@ -31,11 +33,19 @@ func NewRouter() (http.Handler, error) {
 	}
 	walletClient := adapter.NewClient(conn)
 
-	service := service.NewTransactionService(repo, walletClient)
+	txnService := service.NewTransactionService(repo, walletClient)
 
-	handler := handler.New(service)
+	handler := handler.New(txnService)
 
-	routes := []router.Route{}
+	routes := []router.Route{
+		{
+			Path:   "/readiness",
+			Method: http.MethodGet,
+			Handler: ch.CustomHandler(func(rw http.ResponseWriter, r *http.Request) error {
+				return response.OK("Server is up!!!", nil).ToJSON(rw)
+			}),
+		},
+	}
 	routes = append(routes, handler.Routes()...)
 
 	rConf := router.GetEmptyConfig()
@@ -53,5 +63,6 @@ func NewRouter() (http.Handler, error) {
 		log.Printf("router err: %v", err)
 		return nil, err
 	}
+	log.Println("Router created")
 	return middleware.CORS(r), nil
 }

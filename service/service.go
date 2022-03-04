@@ -11,9 +11,9 @@ import (
 )
 
 type ITransactionService interface {
-	Credit(ctx context.Context, userID string, amount float64) (*TxnResponse, error)
-	Debit(ctx context.Context, userID string, amount float64) (*TxnResponse, error)
-	Balance(ctx context.Context, userID string) (*TxnResponse, error)
+	Credit(ctx context.Context, amount float64) (*TxnResponse, error)
+	Debit(ctx context.Context, amount float64) (*TxnResponse, error)
+	Balance(ctx context.Context) (*TxnResponse, error)
 	GetAll(ctx context.Context) ([]model.Transaction, error)
 }
 
@@ -26,7 +26,7 @@ func NewTransactionService(transactionRepository repository.ITransactionReposito
 	return &TransactionService{transactionRepository: transactionRepository, walletClient: wc}
 }
 
-func (t *TransactionService) Credit(ctx context.Context, userID string, amount float64) (*TxnResponse, error) {
+func (t *TransactionService) Credit(ctx context.Context, amount float64) (*TxnResponse, error) {
 	if amount < 0 {
 		return nil, apperror.BadRequestError("Amount cannot be negative.")
 	}
@@ -51,7 +51,7 @@ func (t *TransactionService) Credit(ctx context.Context, userID string, amount f
 	return &TxnResponse{Balance: wallet.Balance}, nil
 }
 
-func (t *TransactionService) Debit(ctx context.Context, userID string, amount float64) (*TxnResponse, error) {
+func (t *TransactionService) Debit(ctx context.Context, amount float64) (*TxnResponse, error) {
 	response, err := t.walletClient.GetBalance(ctx, &proto.GetBalanceRequest{})
 	if err != nil {
 		log.Printf("error: %v \n", err)
@@ -84,7 +84,7 @@ func (t *TransactionService) Debit(ctx context.Context, userID string, amount fl
 	return &TxnResponse{Balance: wallet.Balance}, nil
 }
 
-func (t *TransactionService) Balance(ctx context.Context, userID string) (*TxnResponse, error) {
+func (t *TransactionService) Balance(ctx context.Context) (*TxnResponse, error) {
 	wallet, err := t.walletClient.GetBalance(ctx, &proto.GetBalanceRequest{})
 	if err != nil {
 		log.Printf("error: %v \n", err)

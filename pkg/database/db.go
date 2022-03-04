@@ -11,16 +11,16 @@ import (
 
 //Config - db config struct
 type Config struct {
-	Username string `envconfig:"DATABASE_USERNAME"`
-	Password string `envconfig:"DATABASE_PASSWORD"`
-	Database string `envconfig:"DATABASE_NAME"`
-	Address  string `envconfig:"DATABASE_ADDRESS"`
-	Port     int    `envconfig:"DATABASE_PORT"`
+	Username string `envconfig:"DATABASE_USERNAME" default:"postgres"`
+	Password string `envconfig:"DATABASE_PASSWORD" default:"postgres"`
+	Database string `envconfig:"DATABASE_NAME" default:"postgres"`
+	Address  string `envconfig:"DATABASE_ADDRESS" default:"localhost"`
+	Port     int    `envconfig:"DATABASE_PORT" default:"5432"`
 }
 
 var tables = []string{
 	`CREATE TABLE kola_transactions (
-		id VARCHAR(20) PRIMARY KEY NOT NULL,
+		id VARCHAR(50) PRIMARY KEY NOT NULL,
 		created_at timestamp with time zone NOT NULL DEFAULT current_timestamp,
 		updated_at timestamp with time zone NOT NULL DEFAULT current_timestamp,
 		deleted_at timestamp with time zone DEFAULT NULL,
@@ -28,7 +28,7 @@ var tables = []string{
 		status text NOT NULL DEFAULT 'pending'
 	)`,
 	`CREATE TABLE kola_wallets (
-		id VARCHAR(20) PRIMARY KEY NOT NULL,
+		id VARCHAR(50) PRIMARY KEY NOT NULL,
 		created_at timestamp with time zone NOT NULL DEFAULT current_timestamp,
 		updated_at timestamp with time zone NOT NULL DEFAULT current_timestamp,
 		deleted_at timestamp with time zone DEFAULT NULL,

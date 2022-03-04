@@ -16,7 +16,7 @@ type (
 	//Config - struct
 	Config struct {
 		Address           string        `envconfig:"HTTP_ADDRESS"`
-		Port              string        `envconfig:"HTTP_PORT"`
+		Port              string        `envconfig:"HTTP_PORT" default:"8080"`
 		ReadTimeout       time.Duration `envconfig:"HTTP_READ_TIMEOUT" default:"10s"`
 		ReadHeaderTimeout time.Duration `envconfig:"HTTP_READ_HEADER_TIMEOUT" default:"20s"`
 		WriteTimeout      time.Duration `envconfig:"HTTP_WRITE_TIMEOUT" default:"120s"`
