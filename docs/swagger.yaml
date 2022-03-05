@@ -1,0 +1,112 @@
+basePath: /
+definitions:
+  response.RespBody:
+    properties:
+      data:
+        type: object
+      error:
+        type: string
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
+  service.TxnRequest:
+    properties:
+      amount:
+        type: number
+    type: object
+  service.TxnResponse:
+    properties:
+      balance:
+        type: number
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: Transaction Endpoints.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Transaction Service
+  version: "1.0"
+paths:
+  /balance:
+    get:
+      consumes:
+      - application/json
+      description: Wallet balance
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: desc
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.RespBody'
+            - properties:
+                data:
+                  $ref: '#/definitions/service.TxnResponse'
+              type: object
+      summary: Wallet balance
+      tags:
+      - Transaction
+  /credit:
+    post:
+      consumes:
+      - application/json
+      description: Credit wallet
+      parameters:
+      - description: Body
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/service.TxnRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: desc
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.RespBody'
+            - properties:
+                data:
+                  $ref: '#/definitions/service.TxnResponse'
+              type: object
+      summary: Credit wallet
+      tags:
+      - Transaction
+  /debit:
+    post:
+      consumes:
+      - application/json
+      description: Debit wallet
+      parameters:
+      - description: Body
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/service.TxnRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: desc
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.RespBody'
+            - properties:
+                data:
+                  $ref: '#/definitions/service.TxnResponse'
+              type: object
+      summary: Debit wallet
+      tags:
+      - Transaction
+swagger: "2.0"

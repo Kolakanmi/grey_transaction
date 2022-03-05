@@ -21,7 +21,7 @@ type (
 
 	//Config struct
 	Config struct {
-		// StaticPaths map[string]http.Handler
+		StaticPaths map[string]http.Handler
 
 		GlobalMiddlewares []Middleware
 		Routes            []Route
@@ -44,6 +44,12 @@ func New(conf *Config) (http.Handler, error) {
 		r.Path(route.Path).Methods(route.Method).Handler(h).Queries(route.Queries...)
 	}
 
+	for prefix, preHand := range conf.StaticPaths {
+		// if prefix == "/swagger" {
+		// 	continue
+		// }
+		r.PathPrefix(prefix).Handler(preHand)
+	}
 	if conf.NotFoundHandler != nil {
 		r.PathPrefix("/").Handler(conf.NotFoundHandler)
 	}
