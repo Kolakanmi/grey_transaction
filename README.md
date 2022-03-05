@@ -3,7 +3,7 @@
 This holds the public api for the transaction service.
 APIs can be viewed in the swagger docs at http://localhost:8080/swagger/
 
-Clean code architecture and dependency injection was used.
+Architecture: Clean code architecture and dependency injection.
 
 This service makes a client connection to the wallet grpc service.
 
