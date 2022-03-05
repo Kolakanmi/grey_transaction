@@ -2,17 +2,28 @@ package service
 
 import (
 	"context"
+	"log"
 	"testing"
 
 	"github.com/Kolakanmi/grey_transaction/pkg/apperror"
+	proto "github.com/Kolakanmi/grey_transaction/pkg/grpc/transaction"
 	"github.com/Kolakanmi/grey_transaction/repository/mock"
 	mockConn "github.com/Kolakanmi/grey_transaction/service/mock"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 func getService() *TransactionService {
 	repo := mock.NewMockRepo()
-	client := mockConn.NewMockClient()
-	return NewTransactionService(repo, client)
+	ctx := context.Background()
+	conn, err := grpc.DialContext(ctx, "", grpc.WithTransportCredentials(insecure.NewCredentials()), grpc.WithContextDialer(mockConn.Dialer()))
+	if err != nil {
+		log.Fatal(err)
+	}
+	wc := proto.NewWalletClient(conn)
+
+	// client := mockConn.NewMockClient()
+	return NewTransactionService(repo, wc)
 }
 
 func TestCredit(t *testing.T) {

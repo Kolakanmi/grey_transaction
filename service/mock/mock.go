@@ -2,22 +2,41 @@ package mock
 
 import (
 	"context"
+	"log"
+	"net"
 
 	proto "github.com/Kolakanmi/grey_transaction/pkg/grpc/transaction"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/test/bufconn"
 )
-
-type MockClient struct{}
-
-func NewMockClient() proto.WalletClient {
-	return &MockClient{}
-}
 
 var balance = 100.0
 
-func (m *MockClient) GetBalance(ctx context.Context, in *proto.GetBalanceRequest, opts ...grpc.CallOption) (*proto.GetBalanceResponse, error) {
+type MockServer struct {
+	proto.UnimplementedWalletServer
+}
+
+func (s *MockServer) GetBalance(ctx context.Context, req *proto.GetBalanceRequest) (*proto.GetBalanceResponse, error) {
 	return &proto.GetBalanceResponse{Balance: balance}, nil
 }
-func (m *MockClient) UpdateBalance(ctx context.Context, in *proto.UpdateBalanceRequest, opts ...grpc.CallOption) (*proto.UpdateBalanceResponse, error) {
-	return &proto.UpdateBalanceResponse{Balance: balance + in.Amount}, nil
+func (s *MockServer) UpdateBalance(ctx context.Context, req *proto.UpdateBalanceRequest) (*proto.UpdateBalanceResponse, error) {
+	return &proto.UpdateBalanceResponse{Balance: balance + req.Amount}, nil
+}
+
+func Dialer() func(context.Context, string) (net.Conn, error) {
+	listener := bufconn.Listen(1024 * 1024)
+
+	server := grpc.NewServer()
+
+	proto.RegisterWalletServer(server, &MockServer{})
+
+	go func() {
+		if err := server.Serve(listener); err != nil {
+			log.Fatal(err)
+		}
+	}()
+
+	return func(context.Context, string) (net.Conn, error) {
+		return listener.Dial()
+	}
 }
