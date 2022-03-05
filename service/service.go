@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"log"
+	"math"
 
 	"github.com/Kolakanmi/grey_transaction/model"
 	"github.com/Kolakanmi/grey_transaction/pkg/apperror"
@@ -63,7 +64,7 @@ func (t *TransactionService) Debit(ctx context.Context, amount float64) (*TxnRes
 		log.Printf("error: %v \n", err)
 		return nil, apperror.CouldNotCompleteRequest()
 	}
-	if response.Balance < amount {
+	if response.Balance < math.Abs(amount) {
 		return nil, apperror.BadRequestError("Insufficient balance")
 	}
 	if amount > 0 {

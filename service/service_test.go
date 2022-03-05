@@ -120,3 +120,36 @@ func TestDebit(t *testing.T) {
 		}
 	})
 }
+
+func TestBalance(t *testing.T) {
+	tests := []struct {
+		name string
+		res  *TxnResponse
+		err  error
+	}{
+		{
+			name: "Get balance",
+			res:  &TxnResponse{Balance: 100},
+			err:  nil,
+		},
+	}
+	t.Run("Balance", func(t *testing.T) {
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				s := getService()
+				got, err := s.Balance(context.Background())
+				if err != nil {
+					if tt.err == nil {
+						t.Errorf("Expected no error, but got %v", err)
+					}
+					if err.Error() != tt.err.Error() {
+						t.Errorf("Expected error to be %v, but got %v", tt.err, err)
+					}
+				}
+				if tt.res != nil && got.Balance != tt.res.Balance {
+					t.Errorf("Expected balance to be %v, but got %v", tt.res.Balance, got.Balance)
+				}
+			})
+		}
+	})
+}

@@ -26,7 +26,7 @@ func (h *Handler) Credit(w http.ResponseWriter, r *http.Request) error {
 
 	result, err := h.service.Credit(r.Context(), req.Amount)
 	if err != nil {
-		return err
+		return response.Fail(err).ToJSON(w) //err
 	}
 	return response.OK("Success", result).ToJSON(w)
 }
@@ -41,7 +41,7 @@ func (h *Handler) Debit(w http.ResponseWriter, r *http.Request) error {
 
 	result, err := h.service.Debit(r.Context(), req.Amount)
 	if err != nil {
-		return err
+		return response.Fail(err).ToJSON(w) //err
 	}
 	return response.OK("Success", result).ToJSON(w)
 }
@@ -49,7 +49,7 @@ func (h *Handler) Debit(w http.ResponseWriter, r *http.Request) error {
 func (h *Handler) Balance(w http.ResponseWriter, r *http.Request) error {
 	result, err := h.service.Balance(r.Context())
 	if err != nil {
-		return err
+		return response.Fail(err).ToJSON(w) //err
 	}
 	return response.OK("Success", result).ToJSON(w)
 }
@@ -57,7 +57,7 @@ func (h *Handler) Balance(w http.ResponseWriter, r *http.Request) error {
 func (h *Handler) GetAllTransactions(w http.ResponseWriter, r *http.Request) error {
 	result, err := h.service.GetAll(r.Context())
 	if err != nil {
-		return err
+		return response.Fail(err).ToJSON(w) //err
 	}
 	return response.OK("Success", result).ToJSON(w)
 }
